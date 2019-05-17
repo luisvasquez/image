@@ -267,16 +267,16 @@ class PngDecoder extends Decoder {
       //_numFrames = _info.numFrames;
     }
 
-    int format;
+    Channels channels;
     if (_info.colorType == GRAYSCALE_ALPHA ||
         _info.colorType == RGBA ||
         _info.transparency != null) {
-      format = Image.RGBA;
+      channels = Channels.rgba;
     } else {
-      format = Image.RGB;
+      channels = Channels.rgb;
     }
 
-    Image image = Image(width, height, format);
+    Image image = Image(width, height, channels: channels);
 
     List<int> uncompressed = ZLibDecoder().decodeBytes(imageData);
 
@@ -332,7 +332,7 @@ class PngDecoder extends Decoder {
     return image;
   }
 
-  Image decodeImage(List<int> data, {int frame: 0}) {
+  Image decodeImage(List<int> data, {int frame = 0}) {
     if (startDecode(data) == null) {
       return null;
     }
@@ -391,7 +391,7 @@ class PngDecoder extends Decoder {
     return anim;
   }
 
-  /// Process a pass of an interlaced image.
+  // Process a pass of an interlaced image.
   void _processPass(InputBuffer input, Image image, int xOffset, int yOffset,
       int xStep, int yStep, int passWidth, int passHeight) {
     final int channels = (_info.colorType == GRAYSCALE_ALPHA)
@@ -444,7 +444,7 @@ class PngDecoder extends Decoder {
           //int xPixels = xMax - dstX;
           for (int i = 0; i < blockHeight; ++i) {
             for (int j = 0; j < blockWidth; ++j) {
-              image.setPixel(dstX + j, dstY + j, c);
+              image.setPixelSafe(dstX + j, dstY + j, c);
             }
           }
         }
@@ -562,7 +562,7 @@ class PngDecoder extends Decoder {
     return c << 4;
   }
 
-  /// Return the CRC of the bytes
+  // Return the CRC of the bytes
   int _crc(String type, List<int> bytes) {
     int crc = getCrc32(type.codeUnits);
     return getCrc32(bytes, crc);
@@ -576,7 +576,7 @@ class PngDecoder extends Decoder {
     _bitBufferLen = 0;
   }
 
-  /// Read a number of bits from the input stream.
+  // Read a number of bits from the input stream.
   int _readBits(InputBuffer input, int numBits) {
     if (numBits == 0) {
       return 0;
@@ -620,7 +620,7 @@ class PngDecoder extends Decoder {
     return octet;
   }
 
-  /// Read the next pixel from the input stream.
+  // Read the next pixel from the input stream.
   void _readPixel(InputBuffer input, List<int> pixel) {
     switch (_info.colorType) {
       case GRAYSCALE:
@@ -649,7 +649,7 @@ class PngDecoder extends Decoder {
     throw new ImageException('Invalid color type: ${_info.colorType}.');
   }
 
-  /// Get the color with the list of components.
+  // Get the color with the list of components.
   int _getColor(List<int> raw) {
     switch (_info.colorType) {
       case GRAYSCALE:

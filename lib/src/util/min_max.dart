@@ -1,10 +1,8 @@
 import '../color.dart';
 import '../image.dart';
 
-/**
- * Find the minimum and maximum color value in the image.
- * Returns a list as <[min], [max]>.
- */
+/// Find the minimum and maximum color value in the image.
+/// Returns a list as <[min], [max]>.
 List<int> minMax(Image image) {
   int min = 255;
   int max = 0;
@@ -33,7 +31,7 @@ List<int> minMax(Image image) {
     if (b > max) {
       max = b;
     }
-    if (image.format == Image.RGBA) {
+    if (image.channels == Channels.rgba) {
       int a = getAlpha(c);
       if (a < min) {
         min = a;

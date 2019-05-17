@@ -6,17 +6,12 @@ import 'decoder.dart';
 import 'decode_info.dart';
 import 'tga/tga_info.dart';
 
-/**
- * Decode a TGA image. This only supports the 24-bit uncompressed format.
- * TODO add more TGA support.
- */
+/// Decode a TGA image. This only supports the 24-bit uncompressed format.
 class TgaDecoder extends Decoder {
   TgaInfo info;
   InputBuffer input;
 
-  /**
-   * Is the given file a valid TGA image?
-   */
+  /// Is the given file a valid TGA image?
   bool isValidFile(List<int> data) {
     InputBuffer input = InputBuffer(data, bigEndian: true);
 
@@ -59,7 +54,7 @@ class TgaDecoder extends Decoder {
     }
 
     input.offset = info.imageOffset;
-    Image image = Image(info.width, info.height, Image.RGB);
+    Image image = Image(info.width, info.height, channels: Channels.rgb);
     for (int y = image.height - 1; y >= 0; --y) {
       for (int x = 0; x < image.width; ++x) {
         int b = input.readByte();
@@ -73,7 +68,7 @@ class TgaDecoder extends Decoder {
     return image;
   }
 
-  Image decodeImage(List<int> data, {int frame: 0}) {
+  Image decodeImage(List<int> data, {int frame = 0}) {
     if (startDecode(data) == null) {
       return null;
     }

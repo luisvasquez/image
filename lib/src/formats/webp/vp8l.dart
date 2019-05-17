@@ -11,9 +11,7 @@ import 'vp8l_transform.dart';
 import 'webp_huffman.dart';
 import 'webp_info.dart';
 
-/**
- * WebP lossless format.
- */
+// WebP lossless format.
 class VP8L {
   InputBuffer input;
   VP8LBitReader br;
@@ -23,7 +21,7 @@ class VP8L {
   VP8L(InputBuffer input, WebPInfo webp)
       : this.input = input,
         this.webp = webp,
-        this.br = VP8LBitReader(input) {}
+        this.br = VP8LBitReader(input);
 
   bool decodeHeader() {
     int signature = br.readBits(8);
@@ -205,7 +203,8 @@ class VP8L {
     return data;
   }
 
-  bool _decodeImageData(data, int width, int height, int lastRow, processFunc) {
+  bool _decodeImageData(dynamic data, int width, int height, int lastRow,
+                        dynamic processFunc) {
     int row = _lastPixel ~/ width;
     int col = _lastPixel % width;
 
@@ -256,7 +255,7 @@ class VP8L {
 
           if (colorCache != null) {
             while (lastCached < src) {
-              colorCache.insert(data[lastCached]);
+              colorCache.insert(data[lastCached] as int);
               lastCached++;
             }
           }
@@ -293,7 +292,7 @@ class VP8L {
           }
           if (colorCache != null) {
             while (lastCached < src) {
-              colorCache.insert(data[lastCached]);
+              colorCache.insert(data[lastCached] as int);
               lastCached++;
             }
           }
@@ -303,7 +302,7 @@ class VP8L {
         final int key = code - lenCodeLimit;
 
         while (lastCached < src) {
-          colorCache.insert(data[lastCached]);
+          colorCache.insert(data[lastCached] as int);
           lastCached++;
         }
 
@@ -321,7 +320,7 @@ class VP8L {
 
           if (colorCache != null) {
             while (lastCached < src) {
-              colorCache.insert(data[lastCached]);
+              colorCache.insert(data[lastCached] as int);
               lastCached++;
             }
           }
@@ -346,10 +345,8 @@ class VP8L {
     return true;
   }
 
-  /**
-   * Row-processing for the special case when alpha data contains only one
-   * transform (color indexing), and trivial non-green literals.
-   */
+  // Row-processing for the special case when alpha data contains only one
+  // transform (color indexing), and trivial non-green literals.
   bool _is8bOptimizable() {
     if (_colorCacheSize > 0) {
       return false;
@@ -371,9 +368,7 @@ class VP8L {
     return true;
   }
 
-  /**
-   * Special row-processing that only stores the alpha data.
-   */
+  // Special row-processing that only stores the alpha data.
   void _extractAlphaRows(int row) {
     final int numRows = row - _lastRow;
     if (numRows <= 0) {
@@ -485,9 +480,7 @@ class VP8L {
     _lastRow = row;
   }
 
-  /**
-   * Special method for paletted alpha data.
-   */
+  // Special method for paletted alpha data.
   void _applyInverseTransformsAlpha(int numRows, InputBuffer rows) {
     final int startRow = _lastRow;
     final int endRow = startRow + numRows;
@@ -497,10 +490,8 @@ class VP8L {
     transform.colorIndexInverseTransformAlpha(startRow, endRow, rows, rowsOut);
   }
 
-  /**
-   * Processes (transforms, scales & color-converts) the rows decoded after the
-   * last call.
-   */
+  // Processes (transforms, scales & color-converts) the rows decoded after the
+  // last call.
   //static int __count = 0;
   void _processRows(int row) {
     int rows = webp.width * _lastRow; // offset into _pixels
@@ -741,17 +732,13 @@ class VP8L {
     }
   }
 
-  /**
-   * Computes sampled size of 'size' when sampling using 'sampling bits'.
-   */
+  // Computes sampled size of 'size' when sampling using 'sampling bits'.
   static int _subSampleSize(int size, int samplingBits) {
     return (size + (1 << samplingBits) - 1) >> samplingBits;
   }
 
-  /**
-   * For security reason, we need to remap the color map to span
-   * the total possible bundled values, and not just the num_colors.
-   */
+  // For security reason, we need to remap the color map to span
+  // the total possible bundled values, and not just the num_colors.
   bool _expandColorMap(int numColors, VP8LTransform transform) {
     final int finalNumColors = 1 << (8 >> transform.bits);
     Uint32List newColorMap = Uint32List(finalNumColors);
@@ -1017,7 +1004,8 @@ class InternalVP8L extends VP8L {
   int get ioHeight => _ioHeight;
   set ioHeight(int height) => _ioHeight = height;
 
-  bool decodeImageData(data, int width, int height, int lastRow, processFunc) =>
+  bool decodeImageData(dynamic data, int width, int height, int lastRow,
+                       dynamic processFunc) =>
       _decodeImageData(data, width, height, lastRow, processFunc);
 
   Uint32List decodeImageStream(int xsize, int ysize, bool isLevel0) =>

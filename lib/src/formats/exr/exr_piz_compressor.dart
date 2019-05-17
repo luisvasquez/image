@@ -10,9 +10,7 @@ import 'exr_huffman.dart';
 import 'exr_part.dart';
 import 'exr_wavelet.dart';
 
-/**
- * Wavelet compression
- */
+/// Wavelet compression
 abstract class ExrPizCompressor extends ExrCompressor {
   factory ExrPizCompressor(
           ExrPart header, int maxScanLineSize, int numScanLines) =
@@ -24,7 +22,7 @@ class InternalExrPizCompressor extends InternalExrCompressor
     implements ExrPizCompressor {
   InternalExrPizCompressor(
       ExrPart header, this._maxScanLineSize, this._numScanLines)
-      : super(header) {
+      : super(header as InternalExrPart) {
     _channelData = List<_PizChannelData>(header.channels.length);
     for (int i = 0; i < _channelData.length; ++i) {
       _channelData[i] = _PizChannelData();
@@ -140,7 +138,7 @@ class InternalExrPizCompressor extends InternalExrCompressor
       }
     }
 
-    return _output.getBytes();
+    return _output.getBytes() as Uint8List;
   }
 
   void _applyLut(List<int> lut, List<int> data, int nData) {

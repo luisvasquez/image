@@ -29,7 +29,7 @@ Read Only:
 
 ## [Documentation](https://github.com/brendan-duncan/image/wiki)
 
-## [API](https://www.dartdocs.org/documentation/image/latest/)
+## [API](https://pub.dev/documentation/image/latest/image/image-library.html)
 
 ## [Examples](https://github.com/brendan-duncan/image/wiki/Examples)
 
@@ -39,19 +39,18 @@ Read Only:
 
 Load an image, resize it, and save it as a png:
 
-    import 'dart:io' as Io;
+    import 'dart:io';
     import 'package:image/image.dart';
     void main() {
       // Read an image from file (webp in this case).
       // decodeImage will identify the format of the image and use the appropriate
       // decoder.
-      Image image = decodeImage(new Io.File('test.webp').readAsBytesSync());
+      Image image = decodeImage(File('test.webp').readAsBytesSync());
 
       // Resize the image to a 120x? thumbnail (maintaining the aspect ratio).
-      Image thumbnail = copyResize(image, 120);
+      Image thumbnail = copyResize(image, width: 120);
     
       // Save the thumbnail as a PNG.
-      new Io.File('thumbnail.png')
-            ..writeAsBytesSync(encodePng(thumbnail));
+      File('thumbnail.png')..writeAsBytesSync(encodePng(thumbnail));
     }
 

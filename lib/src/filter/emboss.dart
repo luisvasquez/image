@@ -1,21 +1,13 @@
 import '../image.dart';
 import 'convolution.dart';
 
-/**
- * Apply an emboss convolution filter.
- */
+/// Apply an emboss convolution filter.
 Image emboss(Image src) {
-  const List<double> filter = const [
-    1.5,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    -1.5
+  const filter = [
+    1.5, 0.0, 0.0,
+    0.0, 0.0, 0.0,
+    0.0, 0.0, -1.5
   ];
 
-  return convolution(src, filter, 1, 127);
+  return convolution(src, filter, div: 1, offset: 127);
 }

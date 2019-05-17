@@ -34,7 +34,7 @@ class ExrImage extends DecodeInfo {
     if (!_isMultiPart()) {
       ExrPart part = InternalExrPart(_isTiled(), input);
       if (part.isValid) {
-        _parts.add(part);
+        _parts.add(part as InternalExrPart);
       }
     } else {
       while (true) {
@@ -42,7 +42,7 @@ class ExrImage extends DecodeInfo {
         if (!part.isValid) {
           break;
         }
-        _parts.add(part);
+        _parts.add(part as InternalExrPart);
       }
     }
 
@@ -61,9 +61,7 @@ class ExrImage extends DecodeInfo {
 
   int get numFrames => 1;
 
-  /**
-   * Parse just enough of the file to identify that it's an EXR image.
-   */
+  /// Parse just enough of the file to identify that it's an EXR image.
   static bool isValidFile(List<int> bytes) {
     InputBuffer input = InputBuffer(bytes);
 
@@ -290,7 +288,7 @@ class ExrImage extends DecodeInfo {
   int flags;
 
   /// The MAGIC number is stored in the first four bytes of every
-  /// OpenEXR image file.  This can be used to quickly test whether
+  /// OpenEXR image file. This can be used to quickly test whether
   /// a given file is an OpenEXR image file (see isImfMagic(), below).
   static const int MAGIC = 20000630;
 

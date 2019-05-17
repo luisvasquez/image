@@ -41,13 +41,13 @@ class TiffImage {
   int extraSamples;
   List<int> colorMap;
 
-  /// Starting index in the [colorMap] for the red channel.
+  // Starting index in the [colorMap] for the red channel.
   int colorMapRed;
 
-  /// Starting index in the [colorMap] for the green channel.
+  // Starting index in the [colorMap] for the green channel.
   int colorMapGreen;
 
-  /// Starting index in the [colorMap] for the blue channel.
+  // Starting index in the [colorMap] for the blue channel.
   int colorMapBlue;
   Image image;
   HdrImage hdrImage;
@@ -281,7 +281,9 @@ class TiffImage {
         try {
           decoder.decode(new InputBuffer.from(p, offset: 0, length: byteCount),
               bdata.buffer);
-        } catch (e) {}
+        } catch (e) {
+          print(e);
+        }
         // Horizontal Differencing Predictor
         if (predictor == 2) {
           int count;
@@ -616,9 +618,7 @@ class TiffImage {
     }
   }
 
-  /**
-   * Uncompress packbits compressed image data.
-   */
+  // Uncompress packbits compressed image data.
   void _decodePackbits(InputBuffer data, int arraySize, List<int> dst) {
     int srcCount = 0;
     int dstCount = 0;

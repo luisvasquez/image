@@ -1,7 +1,5 @@
-/**
- * The image library aims to provide server-side programs the ability to load,
- * manipulate, and save various image file formats.
- */
+/// The image library aims to provide server-side programs the ability to load,
+/// manipulate, and save various image file formats.
 library image;
 
 export 'src/draw/draw_char.dart';
@@ -33,8 +31,8 @@ export 'src/filter/pixelate.dart';
 export 'src/filter/quantize.dart';
 export 'src/filter/remap_colors.dart';
 export 'src/filter/scale_rgba.dart';
-export 'src/filter/seperable_convolution.dart';
-export 'src/filter/seperable_kernel.dart';
+export 'src/filter/separable_convolution.dart';
+export 'src/filter/separable_kernel.dart';
 export 'src/filter/sepia.dart';
 export 'src/filter/smooth.dart';
 export 'src/filter/sobel.dart';
@@ -142,6 +140,7 @@ export 'src/transform/copy_crop.dart';
 export 'src/transform/copy_into.dart';
 export 'src/transform/copy_rectify.dart';
 export 'src/transform/copy_resize.dart';
+export 'src/transform/copy_resize_crop_square.dart';
 export 'src/transform/copy_rotate.dart';
 export 'src/transform/flip.dart';
 export 'src/transform/trim.dart';

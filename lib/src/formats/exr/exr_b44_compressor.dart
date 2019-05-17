@@ -16,12 +16,12 @@ class InternalExrB44Compressor extends InternalExrCompressor
     implements ExrB44Compressor {
   InternalExrB44Compressor(ExrPart header, int maxScanLineSize,
       this._numScanLines, bool optFlatFields)
-      : super(header) {}
+      : super(header as InternalExrPart);
 
   int numScanLines() => _numScanLines;
 
   Uint8List compress(InputBuffer inPtr, int x, int y, [int width, int height]) {
-    throw new ImageException('B44 compression not yet supported.');
+    throw ImageException('B44 compression not yet supported.');
   }
 
   Uint8List uncompress(InputBuffer inPtr, int x, int y,

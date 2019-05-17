@@ -1,31 +1,25 @@
 import '../image.dart';
 
-/// Flip the image horizontally.
-const int FLIP_HORIZONTAL = 1;
+enum Flip {
+  /// Flip the image horizontally.
+  horizontal,
+  /// Flip the image vertically.
+  vertical,
+  /// Flip the image both horizontally and vertically.
+  both
+}
 
-/// Flip the image vertically.
-const int FLIP_VERTICAL = 2;
-
-/// Flip the image both horizontally and vertically.
-const int FLIP_BOTH = 3;
-
-/**
- * Flips the [src] image using the given [mode], which can be one of:
- * [FLIP_HORIZONTAL], [FLIP_VERTICAL], or [FLIP_BOTH].
- */
-Image flip(Image src, int mode) {
-  if (mode < 1 || mode > 3) {
-    return src;
-  }
-
+/// Flips the [src] image using the given [mode], which can be one of:
+/// [Flip.horizontal], [Flip.vertical], or [Flip.both].
+Image flip(Image src, Flip mode) {
   switch (mode) {
-    case FLIP_HORIZONTAL:
+    case Flip.horizontal:
       flipHorizontal(src);
       break;
-    case FLIP_VERTICAL:
+    case Flip.vertical:
       flipVertical(src);
       break;
-    case FLIP_BOTH:
+    case Flip.both:
       flipVertical(src);
       flipHorizontal(src);
       break;
@@ -34,9 +28,7 @@ Image flip(Image src, int mode) {
   return src;
 }
 
-/**
- * Flip the [src] image vertically.
- */
+/// Flip the [src] image vertically.
 Image flipVertical(Image src) {
   int w = src.width;
   int h = src.height;
@@ -53,9 +45,7 @@ Image flipVertical(Image src) {
   return src;
 }
 
-/**
- * Flip the src image horizontally.
- */
+/// Flip the src image horizontally.
 Image flipHorizontal(Image src) {
   int w = src.width;
   int h = src.height;

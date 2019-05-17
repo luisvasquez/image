@@ -1,16 +1,10 @@
 import '../image.dart';
 import '../util/point.dart';
 
-/**
- * Returns a copy of the [src] image, where the given rectangle
- * has been mapped to the full image.
- */
-Image copyRectify(Image src,
-    {Point topLeft,
-    Point topRight,
-    Point bottomLeft,
-    Point bottomRight,
-    Image toImage = null}) {
+/// Returns a copy of the [src] image, where the given rectangle
+/// has been mapped to the full image.
+Image copyRectify(Image src, {Point topLeft, Point topRight, Point bottomLeft,
+                  Point bottomRight, Image toImage}) {
   Image dst = toImage == null ? Image.from(src) : toImage;
   for (int y = 0; y < dst.height; ++y) {
     double v = y / (dst.height - 1);

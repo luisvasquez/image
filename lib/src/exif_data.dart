@@ -1,8 +1,6 @@
 import 'dart:typed_data';
 
-/**
- * Exif data stored with an image.
- */
+/// Exif data stored with an image.
 class ExifData {
   static const int CAMERA_MAKE = 0x010F; // string
   static const int CAMERA_MODEL = 0x0110; // string
@@ -16,8 +14,8 @@ class ExifData {
 
   ExifData.from(ExifData other)
       : data = (other == null)
-            ? new Map<int, dynamic>()
-            : new Map<int, dynamic>.from(other.data) {
+            ? Map<int, dynamic>()
+            : Map<int, dynamic>.from(other.data) {
     if (other != null && other.rawData != null) {
       rawData = List<Uint8List>(other.rawData.length);
       for (int i = 0; i < other.rawData.length; ++i) {
@@ -29,6 +27,6 @@ class ExifData {
   bool get hasRawData => rawData != null && rawData.isNotEmpty;
 
   bool get hasOrientation => data.containsKey(ORIENTATION);
-  int get orientation => data[ORIENTATION];
+  int get orientation => data[ORIENTATION] as int;
   set orientation(int value) => data[ORIENTATION] = value;
 }

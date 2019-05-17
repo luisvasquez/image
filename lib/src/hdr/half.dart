@@ -42,7 +42,7 @@ class Half {
     }
 
     // We extract the combined sign and exponent, e, from our
-    // floating-point number, f.  Then we convert e to the sign
+    // floating-point number, f. Then we convert e to the sign
     // and exponent of the half number via a table lookup.
     //
     // For the most common case, where a normalized half is produced,
@@ -72,28 +72,28 @@ class Half {
   double toDouble() => _toFloatFloat32[_h];
 
   /// Unary minus
-  Half operator -() => new Half.fromBits(_h ^ 0x8000);
+  Half operator -() => Half.fromBits(_h ^ 0x8000);
 
   /// Addition operator for Half or num left operands.
   Half operator +(dynamic f) {
     double d = (f is Half) ? f.toDouble() : (f is num) ? f.toDouble() : 0;
-    return new Half(toDouble() + d);
+    return Half(toDouble() + d);
   }
 
   /// Subtraction operator for Half or num left operands.
   Half operator -(dynamic f) {
     double d = (f is Half) ? f.toDouble() : (f is num) ? f.toDouble() : 0;
-    return new Half(toDouble() - d.toDouble());
+    return Half(toDouble() - d.toDouble());
   }
 
   Half operator *(dynamic f) {
     double d = (f is Half) ? f.toDouble() : (f is num) ? f.toDouble() : 0;
-    return new Half(toDouble() * d.toDouble());
+    return Half(toDouble() * d.toDouble());
   }
 
   Half operator /(dynamic f) {
     double d = (f is Half) ? f.toDouble() : (f is num) ? f.toDouble() : 0;
-    return new Half(toDouble() / d.toDouble());
+    return Half(toDouble() / d.toDouble());
   }
 
   /// Round to n-bit precision (n should be between 0 and 10).
@@ -128,7 +128,7 @@ class Half {
 
     // Put the original sign bit back.
 
-    return new Half.fromBits(s | e);
+    return Half.fromBits(s | e);
   }
 
   /// Returns true if h is a normalized number, a denormalized number or zero.
@@ -175,16 +175,16 @@ class Half {
   }
 
   /// Returns +infinity.
-  static Half posInf() => new Half.fromBits(0x7c00);
+  static Half posInf() => Half.fromBits(0x7c00);
 
   /// Returns -infinity.
-  static Half negInf() => new Half.fromBits(0xfc00);
+  static Half negInf() => Half.fromBits(0xfc00);
 
   /// Returns a NAN with the bit pattern 0111111111111111.
-  static Half qNan() => new Half.fromBits(0x7fff);
+  static Half qNan() => Half.fromBits(0x7fff);
 
   /// Returns a NAN with the bit pattern 0111110111111111.
-  static Half sNan() => new Half.fromBits(0x7dff);
+  static Half sNan() => Half.fromBits(0x7dff);
 
   int bits() => _h;
 
@@ -194,7 +194,7 @@ class Half {
 
   static int _convert(int i) {
     // Our floating point number, f, is represented by the bit
-    // pattern in integer i.  Disassemble that bit pattern into
+    // pattern in integer i. Disassemble that bit pattern into
     // the sign, s, the exponent, e, and the significand, m.
     // Shift s into the position where it will go in in the
     // resulting half number.
@@ -207,7 +207,7 @@ class Half {
     // Now reassemble s, e and m into a half:
     if (e <= 0) {
       if (e < -10) {
-        // E is less than -10.  The absolute value of f is
+        // E is less than -10. The absolute value of f is
         // less than HALF_MIN (f may be a small normalized
         // float, a denormalized float or a zero).
         //
@@ -215,7 +215,7 @@ class Half {
         return s;
       }
 
-      // E is between -10 and 0.  F is a normalized float
+      // E is between -10 and 0. F is a normalized float
       // whose magnitude is less than HALF_NRM_MIN.
       //
       // We convert f to a denormalized half.
@@ -228,7 +228,7 @@ class Half {
       // -10 and 0); in case of a tie, round to the nearest even value.
       //
       // Rounding may cause the significand to overflow and make
-      // our number normalized.  Because of the way a half's bits
+      // our number normalized. Because of the way a half's bits
       // are laid out, we don't have to treat this case separately;
       // the code below will handle it correctly.
 
@@ -257,10 +257,10 @@ class Half {
         return s | 0x7c00 | m | ((m == 0) ? 1 : 0);
       }
     } else {
-      // E is greater than zero.  F is a normalized float.
+      // E is greater than zero. F is a normalized float.
       // We try to convert f to a normalized half.
 
-      // Round to m to the nearest 10-bit value.  In case of
+      // Round to m to the nearest 10-bit value. In case of
       // a tie, round to the nearest even value.
       m = m + 0x00000fff + ((m >> 13) & 1);
 

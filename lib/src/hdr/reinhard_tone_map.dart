@@ -1,12 +1,10 @@
-import 'dart:math' as Math;
+import 'dart:math';
 
 import 'hdr_image.dart';
 
-/**
- * Applies Reinhard tone mapping to the hdr image, in-place.
- */
+/// Applies Reinhard tone mapping to the hdr image, in-place.
 HdrImage reinhardToneMap(HdrImage hdr) {
-  const List<double> yw = const [0.212671, 0.715160, 0.072169];
+  const yw = [0.212671, 0.715160, 0.072169];
 
   // Compute world adaptation luminance, _Ywa_
   double Ywa = 0.0;
@@ -18,12 +16,12 @@ HdrImage reinhardToneMap(HdrImage hdr) {
 
       double lum = yw[0] * r + yw[1] * g + yw[2] * b;
       if (lum > 1.0e-4) {
-        Ywa += Math.log(lum);
+        Ywa += log(lum);
       }
     }
   }
 
-  Ywa = Math.exp(Ywa / (hdr.width * hdr.height));
+  Ywa = exp(Ywa / (hdr.width * hdr.height));
 
   double invY2 = 1.0 / (Ywa * Ywa);
 

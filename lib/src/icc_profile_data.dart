@@ -3,9 +3,7 @@ import 'package:archive/archive.dart';
 
 enum ICCPCompression { none, deflate }
 
-/**
- * ICC Profile data stored with an image.
- */
+/// ICC Profile data stored with an image.
 class ICCProfileData {
   String name = "";
   ICCPCompression compression;
@@ -24,7 +22,7 @@ class ICCProfileData {
     if (compression == ICCPCompression.deflate) {
       return data;
     }
-    data = ZLibEncoder().encode(data);
+    data = ZLibEncoder().encode(data) as Uint8List;
     compression = ICCPCompression.deflate;
     return data;
   }
@@ -35,7 +33,7 @@ class ICCProfileData {
     if (compression == ICCPCompression.deflate) {
       return data;
     }
-    data = ZLibDecoder().decodeBytes(data);
+    data = ZLibDecoder().decodeBytes(data) as Uint8List;
     compression = ICCPCompression.none;
     return data;
   }

@@ -1,4 +1,4 @@
-import 'dart:math' as Math;
+import 'dart:math';
 import 'dart:typed_data';
 
 import '../decode_info.dart';
@@ -55,13 +55,11 @@ class PsdImage extends DecodeInfo {
 
   bool get isValid => signature == SIGNATURE;
 
-  /// The number of frames that can be decoded.
+  // The number of frames that can be decoded.
   int get numFrames => 1;
 
-  /**
-   * Decode the raw psd structure without rendering the output image.
-   * Use [renderImage] to render the output image.
-   */
+  // Decode the raw psd structure without rendering the output image.
+  // Use [renderImage] to render the output image.
   bool decode() {
     if (!isValid || _input == null) {
       return false;
@@ -279,11 +277,11 @@ class PsdImage extends DecodeInfo {
   }
 
   static int _blendLighten(int a, int b) {
-    return Math.max(a, b);
+    return max(a, b);
   }
 
   static int _blendDarken(int a, int b) {
-    return Math.min(a, b);
+    return min(a, b);
   }
 
   static int _blendMultiply(int a, int b) {
@@ -303,7 +301,7 @@ class PsdImage extends DecodeInfo {
       z = ba * aa - 2.0 * (aa - x) * (ba - y) + y * (1.0 - aa) + x * (1.0 - ba);
     }
 
-    return (z * 255.0).toInt().clamp(0, 255);
+    return (z * 255.0).clamp(0, 255).toInt();
   }
 
   static int _blendColorBurn(int a, int b) {
@@ -311,22 +309,22 @@ class PsdImage extends DecodeInfo {
       return 0; // We don't want to divide by zero
     }
     int c = (255.0 * (1.0 - (1.0 - (a / 255.0)) / (b / 255.0))).toInt();
-    return c.clamp(0, 255);
+    return c.clamp(0, 255).toInt();
   }
 
   static int _blendLinearBurn(int a, int b) {
-    return (a + b - 255).clamp(0, 255);
+    return (a + b - 255).clamp(0, 255).toInt();
   }
 
   static int _blendScreen(int a, int b) {
-    return (255 - ((255 - b) * (255 - a))).clamp(0, 255);
+    return (255 - ((255 - b) * (255 - a))).clamp(0, 255).toInt();
   }
 
   static int _blendColorDodge(int a, int b) {
     if (b == 255) {
       return 255;
     }
-    return (((a / 255) / (1.0 - (b / 255.0))) * 255.0).toInt().clamp(0, 255);
+    return (((a / 255) / (1.0 - (b / 255.0))) * 255.0).clamp(0, 255).toInt();
   }
 
   static int _blendLinearDodge(int a, int b) {
@@ -562,7 +560,7 @@ class PsdImage extends DecodeInfo {
             int a = _ch(channel1.data, si, ns) - 128;
             int b = _ch(channel2.data, si, ns) - 128;
             int alpha = numChannels >= 4 ? _ch(channel_1.data, si, ns) : 255;
-            List<int> rgb = labToRGB(L, a, b);
+            List<int> rgb = labToRgb(L, a, b);
             pixels[di++] = rgb[2];
             pixels[di++] = rgb[1];
             pixels[di++] = rgb[0];
@@ -582,7 +580,7 @@ class PsdImage extends DecodeInfo {
             int y = _ch(channel2.data, si, ns);
             int k = _ch(channels[numChannels == 4 ? -1 : 3].data, si, ns);
             int alpha = numChannels >= 5 ? _ch(channel_1.data, si, ns) : 255;
-            List<int> rgb = cmykToRGB(255 - c, 255 - m, 255 - y, 255 - k);
+            List<int> rgb = cmykToRgb(255 - c, 255 - m, 255 - y, 255 - k);
             pixels[di++] = rgb[2];
             pixels[di++] = rgb[1];
             pixels[di++] = rgb[0];

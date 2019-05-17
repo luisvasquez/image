@@ -75,9 +75,7 @@ class VP8Filter {
     }
   }
 
-  /**
-   * 8-pixels wide variant, for chroma filtering
-   */
+  // 8-pixels wide variant, for chroma filtering
   void vFilter8(InputBuffer u, InputBuffer v, int stride, int thresh,
       int ithresh, int hev_thresh) {
     _filterLoop26(u, stride, 1, 8, thresh, ithresh, hev_thresh);
@@ -136,9 +134,7 @@ class VP8Filter {
     }
   }
 
-  /**
-   * 4 pixels in, 2 pixels out
-   */
+  // 4 pixels in, 2 pixels out
   void _doFilter2(InputBuffer p, int step) {
     final int p1 = p[-2 * step];
     final int p0 = p[-step];
@@ -151,9 +147,7 @@ class VP8Filter {
     p[0] = clip1[255 + q0 - a1];
   }
 
-  /**
-   * 4 pixels in, 4 pixels out
-   */
+  // 4 pixels in, 4 pixels out
   void _doFilter4(InputBuffer p, int step) {
     final int p1 = p[-2 * step];
     final int p0 = p[-step];
@@ -169,9 +163,7 @@ class VP8Filter {
     p[step] = clip1[255 + q1 - a3];
   }
 
-  /**
-   * 6 pixels in, 6 pixels out
-   */
+  // 6 pixels in, 6 pixels out
   void _doFilter6(InputBuffer p, int step) {
     final int p2 = p[-3 * step];
     final int p1 = p[-2 * step];
@@ -313,9 +305,7 @@ class VP8Filter {
     }
   }
 
-  /**
-   * Simplified transform when only in[0], in[1] and in[4] are non-zero
-   */
+  // Simplified transform when only in[0], in[1] and in[4] are non-zero
   void transformAC3(InputBuffer src, InputBuffer dst) {
     final int a = src[0] + 4;
     final int c4 = _mul(src[4], kC2);
@@ -328,8 +318,8 @@ class VP8Filter {
     _store2(dst, 3, a - d4, d1, c1);
   }
 
-  static int AVG3(a, b, c) => shiftR(((a) + 2 * (b) + (c) + 2), 2);
-  static int AVG2(a, b) => shiftR(((a) + (b) + 1), 1);
+  static int AVG3(int a, int b, int c) => shiftR(((a) + 2 * (b) + (c) + 2), 2);
+  static int AVG2(int a, int b) => shiftR(((a) + (b) + 1), 1);
 
   static void VE4(InputBuffer dst) {
     int top = -VP8.BPS; // dst +
@@ -402,11 +392,9 @@ class VP8Filter {
     trueMotion(dst, 16);
   }
 
-  static int DST(x, y) => x + y * VP8.BPS;
+  static int DST(int x, int y) => x + y * VP8.BPS;
 
-  /**
-   * Down-right
-   */
+  // Down-right
   static void RD4(InputBuffer dst) {
     final int I = dst[-1 + 0 * VP8.BPS];
     final int J = dst[-1 + 1 * VP8.BPS];
@@ -428,9 +416,7 @@ class VP8Filter {
     dst[DST(3, 0)] = AVG3(D, C, B);
   }
 
-  /**
-   * Down-Left
-   */
+  // Down-Left
   static void LD4(InputBuffer dst) {
     final int A = dst[0 - VP8.BPS];
     final int B = dst[1 - VP8.BPS];
@@ -450,9 +436,7 @@ class VP8Filter {
     dst[DST(3, 3)] = AVG3(G, H, H);
   }
 
-  /**
-   * Vertical-Right
-   */
+  // Vertical-Right
   static void VR4(InputBuffer dst) {
     final int I = dst[-1 + 0 * VP8.BPS];
     final int J = dst[-1 + 1 * VP8.BPS];
@@ -475,9 +459,7 @@ class VP8Filter {
     dst[DST(3, 1)] = AVG3(B, C, D);
   }
 
-  /**
-   * Vertical-Left
-   */
+  // Vertical-Left
   static void VL4(InputBuffer dst) {
     final int A = dst[0 - VP8.BPS];
     final int B = dst[1 - VP8.BPS];
@@ -500,9 +482,7 @@ class VP8Filter {
     dst[DST(3, 3)] = AVG3(F, G, H);
   }
 
-  /**
-   * Horizontal-Up
-   */
+  // Horizontal-Up
   static void HU4(InputBuffer dst) {
     final int I = dst[-1 + 0 * VP8.BPS];
     final int J = dst[-1 + 1 * VP8.BPS];
@@ -518,9 +498,7 @@ class VP8Filter {
         dst[DST(0, 3)] = dst[DST(1, 3)] = dst[DST(2, 3)] = dst[DST(3, 3)] = L;
   }
 
-  /**
-   * Horizontal-Down
-   */
+  // Horizontal-Down
   static void HD4(InputBuffer dst) {
     final int I = dst[-1 + 0 * VP8.BPS];
     final int J = dst[-1 + 1 * VP8.BPS];
@@ -575,9 +553,7 @@ class VP8Filter {
     Put16(DC >> 5, dst);
   }
 
-  /**
-   * DC with top samples not available
-   */
+  // DC with top samples not available
   static void DC16NoTop(InputBuffer dst) {
     int DC = 8;
     for (int j = 0; j < 16; ++j) {
@@ -586,9 +562,7 @@ class VP8Filter {
     Put16(DC >> 4, dst);
   }
 
-  /**
-   * DC with left samples not available
-   */
+  // DC with left samples not available
   static void DC16NoLeft(InputBuffer dst) {
     int DC = 8;
     for (int i = 0; i < 16; ++i) {
@@ -597,9 +571,7 @@ class VP8Filter {
     Put16(DC >> 4, dst);
   }
 
-  /**
-   * DC with no top and left samples
-   */
+  // DC with no top and left samples
   static void DC16NoTopLeft(InputBuffer dst) {
     Put16(0x80, dst);
   }
@@ -618,9 +590,7 @@ class VP8Filter {
     }
   }
 
-  /**
-   * helper for chroma-DC predictions
-   */
+  // helper for chroma-DC predictions
   static void Put8x8uv(int value, InputBuffer dst) {
     for (int j = 0; j < 8; ++j) {
       dst.memset(j * VP8.BPS, 8, value);
@@ -635,9 +605,7 @@ class VP8Filter {
     Put8x8uv(dc0 >> 4, dst);
   }
 
-  /**
-   * DC with no left samples
-   */
+  // DC with no left samples
   static void DC8uvNoLeft(InputBuffer dst) {
     int dc0 = 4;
     for (int i = 0; i < 8; ++i) {
@@ -646,9 +614,7 @@ class VP8Filter {
     Put8x8uv(dc0 >> 3, dst);
   }
 
-  /**
-   * DC with no top samples
-   */
+  // DC with no top samples
   static void DC8uvNoTop(InputBuffer dst) {
     int dc0 = 4;
     for (int i = 0; i < 8; ++i) {
@@ -657,14 +623,12 @@ class VP8Filter {
     Put8x8uv(dc0 >> 3, dst);
   }
 
-  /**
-   * DC with nothing
-   */
+  // DC with nothing
   static void DC8uvNoTopLeft(InputBuffer dst) {
     Put8x8uv(0x80, dst);
   }
 
-  static const List PredLuma4 = const [
+  static const PredLuma4 = [
     DC4,
     TM4,
     VE4,
@@ -677,7 +641,7 @@ class VP8Filter {
     HU4
   ];
 
-  static const List PredLuma16 = const [
+  static const PredLuma16 = [
     DC16,
     TM16,
     VE16,
@@ -687,7 +651,7 @@ class VP8Filter {
     DC16NoTopLeft
   ];
 
-  static const List PredChroma8 = const [
+  static const PredChroma8 = [
     DC8uv,
     TM8uv,
     VE8uv,
@@ -716,19 +680,19 @@ class VP8Filter {
     _store(dst, 0, 3, y, dc - d);
   }
 
-  /// abs(i)
+  // abs(i)
   static Uint8List abs0 = Uint8List(255 + 255 + 1);
 
-  /// abs(i)>>1
+  // abs(i)>>1
   static Uint8List abs1 = Uint8List(255 + 255 + 1);
 
-  /// clips [-1020, 1020] to [-128, 127]
+  // clips [-1020, 1020] to [-128, 127]
   static Int8List sclip1 = Int8List(1020 + 1020 + 1);
 
-  /// clips [-112, 112] to [-16, 15]
+  // clips [-112, 112] to [-16, 15]
   static Int8List sclip2 = Int8List(112 + 112 + 1);
 
-  /// clips [-255,510] to [0,255]
+  // clips [-255,510] to [0,255]
   static Uint8List clip1 = Uint8List(255 + 510 + 1);
 
   static void _initTables() {

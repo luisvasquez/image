@@ -6,35 +6,38 @@ import '../image_exception.dart';
 import '../util/interpolation.dart';
 import 'bake_orientation.dart';
 
-/**
- * Returns a resized copy of the [src] image.
- * If [height] is -1, then it will be determined by the aspect
- * ratio of [src] and [width].
- * If [width] is -1, then it will be determined by the aspect ratio
- * of [src] and [height].
- */
-Image copyResize(Image src, int width,
-    [int height = -1, int interpolation = NEAREST]) {
-  if (width <= 0 && height <= 0) {
-    throw new ImageException('Invalid size');
+/// Returns a resized copy of the [src] image.
+/// If [height] isn't specified, then it will be determined by the aspect
+/// ratio of [src] and [width].
+/// If [width] isn't specified, then it will be determined by the aspect ratio
+/// of [src] and [height].
+Image copyResize(Image src, {int width, int height,
+                  Interpolation interpolation = Interpolation.nearest}) {
+  if (width == null && height == null) {
+    throw ImageException('Invalid size');
   }
 
   src = bakeOrientation(src);
 
-  if (height <= 0) {
+  if (height == null || height <= 0) {
     height = (width * (src.height / src.width)).toInt();
   }
 
-  if (width <= 0) {
+  if (width == null || width <= 0) {
     width = (height * (src.width / src.height)).toInt();
   }
 
-  Image dst = Image(width, height, src.format, src.exif, src.iccProfile);
+  if (width == src.width && height == src.height) {
+    return src.clone();
+  }
+
+  Image dst = Image(width, height, channels: src.channels, exif: src.exif,
+      iccp: src.iccProfile);
 
   double dy = src.height / height;
   double dx = src.width / width;
 
-  if (interpolation == AVERAGE) {
+  if (interpolation == Interpolation.average) {
     Uint8List sData = src.getBytes();
     int sw4 = src.width * 4;
 
@@ -69,7 +72,7 @@ Image copyResize(Image src, int width,
         dst.setPixel(x, y, getColor(r ~/ np, g ~/ np, b ~/ np, a ~/ np));
       }
     }
-  } else if (interpolation == NEAREST) {
+  } else if (interpolation == Interpolation.nearest) {
     final scaleX = Int32List(width);
     for (int x = 0; x < width; ++x) {
       scaleX[x] = (x * dx).toInt();

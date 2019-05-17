@@ -12,14 +12,15 @@ class InputBuffer {
   bool bigEndian;
 
   /// Create a InputStream for reading from a List<int>
-  InputBuffer(List<int> buffer, {this.bigEndian: false, int offset: 0, int length})
+  InputBuffer(List<int> buffer, {this.bigEndian = false, int offset = 0,
+              int length})
       : this.buffer = buffer,
         this.start = offset,
         this.offset = offset,
         this.end = (length == null) ? buffer.length : offset + length;
 
   /// Create a copy of [other].
-  InputBuffer.from(InputBuffer other, {int offset: 0, int length})
+  InputBuffer.from(InputBuffer other, {int offset = 0, int length})
       : this.buffer = other.buffer,
         this.offset = other.offset + offset,
         this.start = other.start,
@@ -66,21 +67,21 @@ class InputBuffer {
     buffer.fillRange(offset + start, offset + start + length, value);
   }
 
-  /// Return a InputStream to read a subset of this stream.  It does not
-  /// move the read position of this stream.  [position] is specified relative
-  /// to the start of the buffer.  If [position] is not specified, the current
+  /// Return a InputStream to read a subset of this stream. It does not
+  /// move the read position of this stream. [position] is specified relative
+  /// to the start of the buffer. If [position] is not specified, the current
   /// read position is used. If [length] is not specified, the remainder of this
   /// stream is used.
-  InputBuffer subset(int count, {int position, int offset: 0}) {
+  InputBuffer subset(int count, {int position, int offset = 0}) {
     int pos = position != null ? start + position : this.offset;
     pos += offset;
 
-    return new InputBuffer(buffer,
+    return InputBuffer(buffer,
         bigEndian: bigEndian, offset: pos, length: count);
   }
 
   /// Returns the position of the given [value] within the buffer, starting
-  /// from the current read position with the given [offset].  The position
+  /// from the current read position with the given [offset]. The position
   /// returned is relative to the start of the buffer, or -1 if the [value]
   /// was not found.
   int indexOf(int value, [int offset = 0]) {
@@ -129,11 +130,11 @@ class InputBuffer {
       while (!isEOS) {
         int c = readByte();
         if (c == 0) {
-          return new String.fromCharCodes(codes);
+          return String.fromCharCodes(codes);
         }
         codes.add(c);
       }
-      throw new ImageException('EOF reached without finding string terminator');
+      throw ImageException('EOF reached without finding string terminator');
     }
 
     InputBuffer s = readBytes(len);
@@ -238,19 +239,19 @@ class InputBuffer {
     int len = length != null ? length : this.length - offset;
     if (buffer is Uint8List) {
       Uint8List b = buffer as Uint8List;
-      return new Uint8List.view(
+      return Uint8List.view(
           b.buffer, b.offsetInBytes + this.offset + offset, len);
     }
-    return new Uint8List.fromList(
+    return Uint8List.fromList(
         buffer.sublist(this.offset + offset, this.offset + offset + len));
   }
 
   Uint32List toUint32List([int offset = 0]) {
     if (buffer is Uint8List) {
       Uint8List b = buffer as Uint8List;
-      return new Uint32List.view(
+      return Uint32List.view(
           b.buffer, b.offsetInBytes + this.offset + offset);
     }
-    return new Uint32List.view(toUint8List().buffer);
+    return Uint32List.view(toUint8List().buffer);
   }
 }

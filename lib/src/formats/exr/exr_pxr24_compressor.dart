@@ -19,19 +19,19 @@ class InternalExrPxr24Compressor extends InternalExrCompressor
     implements ExrPxr24Compressor {
   InternalExrPxr24Compressor(
       ExrPart header, this._maxScanLineSize, this._numScanLines)
-      : super(header) {}
+      : super(header as InternalExrPart);
 
   int numScanLines() => _numScanLines;
 
   Uint8List compress(InputBuffer inPtr, int x, int y, [int width, int height]) {
-    throw new ImageException('Pxr24 compression not yet supported.');
+    throw ImageException('Pxr24 compression not yet supported.');
   }
 
   Uint8List uncompress(InputBuffer inPtr, int x, int y,
       [int width, int height]) {
     List<int> data = _zlib.decodeBytes(inPtr.toUint8List());
     if (data == null) {
-      throw new ImageException('Error decoding pxr24 compressed data');
+      throw ImageException('Error decoding pxr24 compressed data');
     }
 
     if (_output == null) {
@@ -125,7 +125,7 @@ class InternalExrPxr24Compressor extends InternalExrCompressor
       }
     }
 
-    return _output.getBytes();
+    return _output.getBytes() as Uint8List;
   }
 
   ZLibDecoder _zlib = ZLibDecoder();

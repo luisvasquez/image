@@ -6,10 +6,8 @@ import '../../util/input_buffer.dart';
 import 'pvrtc_color.dart';
 import 'pvrtc_packet.dart';
 
-/**
- * Ported from Jeffrey Lim's PVRTC encoder/decoder,
- * https://bitbucket.org/jthlim/pvrtccompressor
- */
+// Ported from Jeffrey Lim's PVRTC encoder/decoder,
+// https://bitbucket.org/jthlim/pvrtccompressor
 class PvrtcDecoder {
   Image decodePvr(List<int> data) {
     // Use a heuristic to detect potential apple PVRTC formats
@@ -460,7 +458,7 @@ class PvrtcDecoder {
   }
 
   Image decodeRgb4bpp(int width, int height, TypedData data) {
-    var result = Image(width, height, Image.RGB);
+    var result = Image(width, height, channels: Channels.rgb);
 
     final int blocks = width ~/ 4;
     final int blockMask = blocks - 1;
@@ -529,7 +527,7 @@ class PvrtcDecoder {
   }
 
   Image decodeRgba4bpp(int width, int height, TypedData data) {
-    var result = Image(width, height, Image.RGBA);
+    var result = Image(width, height, channels: Channels.rgb);
 
     final int blocks = width ~/ 4;
     final int blockMask = blocks - 1;

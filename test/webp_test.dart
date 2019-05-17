@@ -1,20 +1,20 @@
-import 'dart:io' as Io;
+import 'dart:io';
 import 'package:image/image.dart';
 import 'package:test/test.dart';
 
 void main() {
-  Io.Directory dir = Io.Directory('test/res/webp');
-  List files = dir.listSync();
+  Directory dir = Directory('test/res/webp');
+  var files = dir.listSync();
 
   group('WebP/getInfo', () {
     for (var f in files) {
-      if (f is! Io.File || !f.path.endsWith('.webp')) {
+      if (f is! File || !f.path.endsWith('.webp')) {
         continue;
       }
 
       String name = f.path.split(new RegExp(r'(/|\\)')).last;
       test('$name', () {
-        List<int> bytes = f.readAsBytesSync();
+        List<int> bytes = (f as File).readAsBytesSync();
 
         WebPInfo data = WebPDecoder().startDecode(bytes);
         if (data == null) {
@@ -27,39 +27,29 @@ void main() {
           expect(data.height, equals(_webp_tests[name]['height']));
           expect(data.hasAlpha, equals(_webp_tests[name]['hasAlpha']));
           expect(data.hasAnimation, equals(_webp_tests[name]['hasAnimation']));
+
+          if (data.hasAnimation) {
+            Animation anim = WebPDecoder().decodeAnimation(bytes);
+            expect(anim.length, equals(_webp_tests[name]['numFrames']));
+          }
         }
       });
     }
   });
 
-  /*List<int> bytes = Io.File('1_webp_ll.webp')
-                          .readAsBytesSync();
-  Image image = WebPDecoder().decodeImage(bytes);
-  List<int> png = PngEncoder().encode(image);
-  new Io.File('out/webp/decode.png')
-        ..createSync(recursive: true)
-        ..writeAsBytesSync(png);*/
-
-  /*Animation anim = WebPDecoder().decodeAnimation(bytes);
-  for (int i = 0; i < anim.numFrames; ++i) {
-    AnimationFrame frame = anim[i];
-    List<int> png = PngEncoder().encode(frame.image);
-    new Io.File('out/webp/comp_$i.png')
-          ..writeAsBytesSync(png);
-  }*/
 
   group('WebP/decodeImage', () {
     test('validate', () {
-      Io.File file = Io.File('test/res/webp/2b.webp');
+      File file = File('test/res/webp/2b.webp');
       List<int> bytes = file.readAsBytesSync();
       Image image = WebPDecoder().decodeImage(bytes);
       List<int> png = PngEncoder().encodeImage(image);
-      new Io.File('out/webp/decode.png')
+      new File('out/webp/decode.png')
         ..createSync(recursive: true)
         ..writeAsBytesSync(png);
 
       // Validate decoding.
-      file = Io.File('test/res/webp/2b.png');
+      file = File('test/res/webp/2b.png');
       bytes = file.readAsBytesSync();
       Image debugImage = PngDecoder().decodeImage(bytes);
       bool found = false;
@@ -73,20 +63,20 @@ void main() {
     });
 
     for (var f in files) {
-      if (f is! Io.File || !f.path.endsWith('.webp')) {
+      if (f is! File || !f.path.endsWith('.webp')) {
         continue;
       }
 
       String name = f.path.split(new RegExp(r'(/|\\)')).last;
       test('$name', () {
-        List<int> bytes = f.readAsBytesSync();
+        List<int> bytes = (f as File).readAsBytesSync();
         Image image = WebPDecoder().decodeImage(bytes);
         if (image == null) {
           throw new ImageException('Unable to decode WebP Image: $name.');
         }
 
         List<int> png = PngEncoder().encodeImage(image);
-        new Io.File('out/webp/${name}.png')
+        new File('out/webp/${name}.png')
           ..createSync(recursive: true)
           ..writeAsBytesSync(png);
       });
@@ -94,180 +84,156 @@ void main() {
   });
 }
 
-const Map _webp_tests = const {
-  '1.webp': const {
+const _webp_tests = {
+  '1.webp': {
     'format': 1,
     'width': 550,
     'height': 368,
     'hasAlpha': false,
     'hasAnimation': false
   },
-  '1_webp_a.webp': const {
+  '1_webp_a.webp': {
     'format': 1,
     'width': 400,
     'height': 301,
     'hasAlpha': true,
     'hasAnimation': false
   },
-  '1_webp_ll.webp': const {
+  '1_webp_ll.webp': {
     'format': 2,
     'width': 400,
     'height': 301,
     'hasAlpha': true,
     'hasAnimation': false
   },
-  '2.webp': const {
+  '2.webp': {
     'format': 1,
     'width': 550,
     'height': 404,
     'hasAlpha': false,
     'hasAnimation': false
   },
-  '2b.webp': const {
+  '2b.webp': {
     'format': 1,
     'width': 75,
     'height': 55,
     'hasAlpha': false,
     'hasAnimation': false
   },
-  '2_webp_a.webp': const {
+  '2_webp_a.webp': {
     'format': 1,
     'width': 386,
     'height': 395,
     'hasAlpha': true,
     'hasAnimation': false
   },
-  '2_webp_ll.webp': const {
+  '2_webp_ll.webp': {
     'format': 2,
     'width': 386,
     'height': 395,
     'hasAlpha': true,
     'hasAnimation': false
   },
-  '3.webp': const {
+  '3.webp': {
     'format': 1,
     'width': 1280,
     'height': 720,
     'hasAlpha': false,
     'hasAnimation': false
   },
-  '3_webp_a.webp': const {
+  '3_webp_a.webp': {
     'format': 1,
     'width': 800,
     'height': 600,
     'hasAlpha': true,
     'hasAnimation': false
   },
-  '3_webp_ll.webp': const {
+  '3_webp_ll.webp': {
     'format': 2,
     'width': 800,
     'height': 600,
     'hasAlpha': true,
     'hasAnimation': false
   },
-  '4.webp': const {
+  '4.webp': {
     'format': 1,
     'width': 1024,
     'height': 772,
     'hasAlpha': false,
     'hasAnimation': false
   },
-  '4_webp_a.webp': const {
+  '4_webp_a.webp': {
     'format': 1,
     'width': 421,
     'height': 163,
     'hasAlpha': true,
     'hasAnimation': false
   },
-  '4_webp_ll.webp': const {
+  '4_webp_ll.webp': {
     'format': 2,
     'width': 421,
     'height': 163,
     'hasAlpha': true,
     'hasAnimation': false
   },
-  '5.webp': const {
+  '5.webp': {
     'format': 1,
     'width': 1024,
     'height': 752,
     'hasAlpha': false,
     'hasAnimation': false
   },
-  '5_webp_a.webp': const {
+  '5_webp_a.webp': {
     'format': 1,
     'width': 300,
     'height': 300,
     'hasAlpha': true,
     'hasAnimation': false
   },
-  '5_webp_ll.webp': const {
+  '5_webp_ll.webp': {
     'format': 2,
     'width': 300,
     'height': 300,
     'hasAlpha': true,
     'hasAnimation': false
   },
-  'BladeRunner.webp': const {
+  'BladeRunner.webp': {
     'format': 3,
     'width': 500,
     'height': 224,
     'hasAlpha': true,
-    'hasAnimation': true
+    'hasAnimation': true,
+    'numFrames': 75
   },
-  'BladeRunner_lossy.webp': const {
+  'BladeRunner_lossy.webp': {
     'format': 3,
     'width': 500,
     'height': 224,
     'hasAlpha': true,
-    'hasAnimation': true
+    'hasAnimation': true,
+    'numFrames': 75
   },
-  'Contact.webp': const {
-    'format': 3,
-    'width': 500,
-    'height': 219,
-    'hasAlpha': true,
-    'hasAnimation': true
-  },
-  'Contact_lossy.webp': const {
-    'format': 3,
-    'width': 500,
-    'height': 219,
-    'hasAlpha': true,
-    'hasAnimation': true
-  },
-  'GenevaDrive.webp': const {
-    'format': 3,
-    'width': 320,
-    'height': 240,
-    'hasAlpha': true,
-    'hasAnimation': true
-  },
-  'GenevaDrive_lossy.webp': const {
-    'format': 3,
-    'width': 320,
-    'height': 240,
-    'hasAlpha': true,
-    'hasAnimation': true
-  },
-  'red.webp': const {
+  'red.webp': {
     'format': 1,
     'width': 32,
     'height': 32,
     'hasAlpha': false,
     'hasAnimation': false
   },
-  'SteamEngine.webp': const {
+  'SteamEngine.webp': {
     'format': 3,
     'width': 320,
     'height': 240,
     'hasAlpha': true,
-    'hasAnimation': true
+    'hasAnimation': true,
+    'numFrames': 31
   },
-  'SteamEngine_lossy.webp': const {
+  'SteamEngine_lossy.webp': {
     'format': 3,
     'width': 320,
     'height': 240,
     'hasAlpha': true,
-    'hasAnimation': true
+    'hasAnimation': true,
+    'numFrames': 31
   }
 };

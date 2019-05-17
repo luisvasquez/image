@@ -1,4 +1,4 @@
-import 'dart:html' as Html;
+import 'dart:html';
 import 'dart:math';
 import 'package:image/image.dart';
 
@@ -6,16 +6,14 @@ double logN(num x, num div) {
   return log(x) / div;
 }
 
-/**
- * Render the Mandelbrot Set into an Image and display it.
- */
+/// Render the Mandelbrot Set into an Image and display it.
 void main() {
   const int width = 1024;
   const int height = 1024;
 
   // Create a canvas to put our decoded image into.
-  var c = Html.CanvasElement(width: width, height: height);
-  Html.document.body.append(c);
+  var c = CanvasElement(width: width, height: height);
+  document.body.append(c);
 
   double zoom = 1.0;
   double moveX = -0.5;
@@ -52,22 +50,22 @@ void main() {
       }
 
       if (i == MaxIterations) {
-        image.setPixelRGBA(x, y, 0, 0, 0);
+        image.setPixelRgba(x, y, 0, 0, 0);
       } else {
         double z = sqrt(newRe * newRe + newIm * newIm);
         double b = 256.0 *
             logN(1.75 + i - logN(logN(z, log2), log2), log2) /
             Log2MaxIterations;
         int brightness = b.toInt();
-        image.setPixelRGBA(x, y, brightness, brightness, 255);
+        image.setPixelRgba(x, y, brightness, brightness, 255);
       }
     }
   }
 
   // Create a buffer that the canvas can draw.
-  Html.ImageData d = c.context2D.createImageData(image.width, image.height);
+  ImageData d = c.context2D.createImageData(image.width, image.height);
   // Fill the buffer with our image data.
-  d.data.setRange(0, d.data.length, image.getBytes());
+  d.data.setRange(0, d.data.length, image.getBytes(format: Format.rgba));
   // Draw the buffer onto the canvas.
   c.context2D.putImageData(d, 0, 0);
 }

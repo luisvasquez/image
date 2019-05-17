@@ -33,9 +33,7 @@ class OctreeQuantizer extends Quantizer {
     }
   }
 
-  /**
-   * Find the index of the closest color to [c] in the [colorMap].
-   */
+  /// Find the index of the closest color to [c] in the [colorMap].
   int getQuantizedColor(int c) {
     int r = getRed(c);
     int g = getGreen(c);
@@ -185,7 +183,7 @@ class _OctreeNode {
   int count = 0;
   int heap_idx = 0;
   List<_OctreeNode> children = List<_OctreeNode>(8);
-  _OctreeNode parent = null;
+  _OctreeNode parent;
   int childCount = 0;
   int childIndex = 0;
   int flags = 0;

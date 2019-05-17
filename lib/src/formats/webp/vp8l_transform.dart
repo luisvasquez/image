@@ -136,9 +136,7 @@ class VP8LTransform {
     }
   }
 
-  /**
-   * Color space inverse transform.
-   */
+  // Color space inverse transform.
   void colorSpaceInverseTransform(
       int yStart, int yEnd, Uint32List outData, int data) {
     final int width = xsize;
@@ -169,9 +167,7 @@ class VP8LTransform {
     }
   }
 
-  /**
-   * Inverse prediction.
-   */
+  // Inverse prediction.
   void predictorInverseTransform(
       int yStart, int yEnd, Uint32List outData, int data) {
     final int width = xsize;
@@ -224,10 +220,8 @@ class VP8LTransform {
     }
   }
 
-  /**
-   * Add green to blue and red channels (i.e. perform the inverse transform of
-   * 'subtract green').
-   */
+  // Add green to blue and red channels (i.e. perform the inverse transform of
+  // 'subtract green').
   void addGreenToBlueAndRed(Uint32List pixels, int data, int dataEnd) {
     while (data < dataEnd) {
       final int argb = pixels[data];
@@ -255,9 +249,7 @@ class VP8LTransform {
     return (val >> 8) & 0xff;
   }
 
-  /**
-   * In-place sum of each component with mod 256.
-   */
+  // In-place sum of each component with mod 256.
   static void _addPixelsEq(Uint32List pixels, int a, int b) {
     int pa = pixels[a];
     final int alphaAndGreen = (pa & 0xff00ff00) + (b & 0xff00ff00);
@@ -277,10 +269,8 @@ class VP8LTransform {
     return _average2(_average2(a0, a1), _average2(a2, a3));
   }
 
-  /**
-   * Return 0, when a is a negative integer.
-   * Return 255, when a is positive.
-   */
+  // Return 0, when a is a negative integer.
+  // Return 255, when a is positive.
   static int _clip255(int a) {
     if (a < 0) {
       return 0;
@@ -394,7 +384,7 @@ class VP8LTransform {
     return _clampedAddSubtractHalf(left, pixels[top], pixels[top - 1]);
   }
 
-  static final List PREDICTORS = [
+  static final PREDICTORS = [
     _predictor0,
     _predictor1,
     _predictor2,
@@ -415,7 +405,7 @@ class VP8LTransform {
 }
 
 class _VP8LMultipliers {
-  final Uint8List data = Uint8List(3);
+  final data = Uint8List(3);
 
   // Note: the members are uint8_t, so that any negative values are
   // automatically converted to "mod 256" values.
@@ -437,7 +427,7 @@ class _VP8LMultipliers {
     data[2] = 0;
   }
 
-  void set colorCode(int colorCode) {
+  set colorCode(int colorCode) {
     data[0] = (colorCode >> 0) & 0xff;
     data[1] = (colorCode >> 8) & 0xff;
     data[2] = (colorCode >> 16) & 0xff;

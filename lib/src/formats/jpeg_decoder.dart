@@ -9,16 +9,12 @@ import 'decoder.dart';
 import 'jpeg/jpeg_data.dart';
 import 'jpeg/jpeg_info.dart';
 
-/**
- * Decode a jpeg encoded image.
- */
+/// Decode a jpeg encoded image.
 class JpegDecoder extends Decoder {
   JpegInfo info;
   InputBuffer input;
 
-  /**
-   * Is the given file a valid JPEG image?
-   */
+  /// Is the given file a valid JPEG image?
   bool isValidFile(List<int> data) {
     return new JpegData().validate(data);
   }
@@ -42,14 +38,14 @@ class JpegDecoder extends Decoder {
       throw new ImageException('only single frame JPEGs supported');
     }
 
-    Image image = Image(jpeg.width, jpeg.height, Image.RGB);
+    Image image = Image(jpeg.width, jpeg.height, channels: Channels.rgb);
 
     _copyToImage(jpeg, image);
 
     return image;
   }
 
-  Image decodeImage(List<int> data, {int frame: 0}) {
+  Image decodeImage(List<int> data, {int frame = 0}) {
     JpegData jpeg = JpegData();
     jpeg.read(data);
 
@@ -57,7 +53,7 @@ class JpegDecoder extends Decoder {
       throw new ImageException('only single frame JPEGs supported');
     }
 
-    Image image = Image(jpeg.width, jpeg.height, Image.RGB);
+    Image image = Image(jpeg.width, jpeg.height, channels: Channels.rgb);
 
     _copyToImage(jpeg, image);
 
