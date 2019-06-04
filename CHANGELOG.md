@@ -1,3 +1,20 @@
+## 2.1.4 - June 01, 2019
+
+- Optimize fillRect, drawPixel, and other drawing functions when opaque colors are used.
+
+## 2.1.3 - May 26, 2019
+
+- Revert the internal color format to #AABBGGRR.
+
+## 2.1.2 - May 25, 2019
+
+- Fix crash decoding some Jpeg images.
+- Fix infinite recursion crash with fillFlood when fill color is the same as the start pixel color. 
+
+## 2.1.1 - May 22, 2019
+
+- Fix typo and missing license in license file.
+
 ## 2.1.0 - May 15, 2019
 
 - Big API clean-up to bring it up to a more modern Dart syntax.

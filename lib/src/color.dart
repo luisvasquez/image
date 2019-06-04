@@ -4,12 +4,12 @@ import 'image_exception.dart';
 import 'internal/clamp.dart';
 
 enum Channel {
-  /// Blue channel of a color.
-  blue,
-  /// Green channel of a color.
-  green,
   /// Red channel of a color.
   red,
+  /// Green channel of a color.
+  green,
+  /// Blue channel of a color.
+  blue,
   /// Alpha channel of a color.
   alpha,
   /// Luminance (brightness) of a color.
@@ -82,12 +82,12 @@ class Color {
 
 /// Get the color with the given [r], [g], [b], and [a] components.
 ///
-/// The channel order of a uint32 encoded color is BGRA.
+/// The channel order of a uint32 encoded color is RGBA.
 int getColor(int r, int g, int b, [int a = 255]) =>
     (clamp255(a) << 24) |
-    (clamp255(r) << 16) |
+    (clamp255(b) << 16) |
     (clamp255(g) << 8) |
-    (clamp255(b));
+    (clamp255(r));
 
 /// Get the [channel] from the [color].
 int getChannel(int color, Channel channel) =>
@@ -106,12 +106,12 @@ int setChannel(int color, Channel channel, int value) =>
     : channel == Channel.alpha ? setAlpha(color, value)
     : color;
 
-/// Get the blue channel from the [color].
-int getBlue(int color) => (color) & 0xff;
+/// Get the red channel from the [color].
+int getRed(int color) => (color) & 0xff;
 
-/// Returns a new color where the blue channel of [color] has been replaced
+/// Returns a new color where the red channel of [color] has been replaced
 /// by [value].
-int setBlue(int color, int value) => (color & 0xffffff00) | (clamp255(value));
+int setRed(int color, int value) => (color & 0xffffff00) | (clamp255(value));
 
 /// Get the green channel from the [color].
 int getGreen(int color) => (color >> 8) & 0xff;
@@ -121,12 +121,12 @@ int getGreen(int color) => (color >> 8) & 0xff;
 int setGreen(int color, int value) =>
     (color & 0xffff00ff) | (clamp255(value) << 8);
 
-/// Get the red channel from the [color].
-int getRed(int color) => (color >> 16) & 0xff;
+/// Get the blue channel from the [color].
+int getBlue(int color) => (color >> 16) & 0xff;
 
-/// Returns a new color where the red channel of [color] has been replaced
+/// Returns a new color where the blue channel of [color] has been replaced
 /// by [value].
-int setRed(int color, int value) =>
+int setBlue(int color, int value) =>
     (color & 0xff00ffff) | (clamp255(value) << 16);
 
 /// Get the alpha channel from the [color].
@@ -140,7 +140,12 @@ int setAlpha(int color, int value) =>
 /// Returns a new color of [src] alpha-blended onto [dst]. The opacity of [src]
 /// is additionally scaled by [fraction] / 255.
 int alphaBlendColors(int dst, int src, [int fraction = 0xff]) {
-  double a = (getAlpha(src) / 255.0);
+  int srcAlpha = getAlpha(src);
+  if (srcAlpha == 255 && fraction == 0xff) {
+    // src is fully opaque, nothing to blend
+    return src;
+  }
+  double a = (srcAlpha / 255.0);
   if (fraction != 0xff) {
     a *= (fraction / 255.0);
   }
@@ -148,7 +153,7 @@ int alphaBlendColors(int dst, int src, [int fraction = 0xff]) {
   int sr = (getRed(src) * a).round();
   int sg = (getGreen(src) * a).round();
   int sb = (getBlue(src) * a).round();
-  int sa = (getAlpha(src) * a).round();
+  int sa = (srcAlpha * a).round();
 
   int dr = (getRed(dst) * (1.0 - a)).round();
   int dg = (getGreen(dst) * (1.0 - a)).round();
